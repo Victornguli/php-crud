@@ -66,6 +66,8 @@
                                 //Update one record
                                 echo "<a href='update.php?id={$row["id"]}' class='btn btn-primary m-r-1em'> Edit </a>";
 
+                                //Delete User
+                                echo "<a href='#' onclick='deleteUser({$row["id"]})' class='btn btn-danger m-r-1em'> Delete </a>";
                             echo "</td>";
                         echo "</tr>";
 
