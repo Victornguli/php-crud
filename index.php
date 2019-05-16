@@ -34,6 +34,17 @@
 
         <?php
             include "config/database.php";
+
+            $action = isset($_GET["action"]) ? $_GET["action"] : "";
+            
+            if ($action == "deleted"){
+                echo "<div class='alert alert-success alert-dismissible'>
+                <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                <strong>Success!</strong>One product deleted.
+            </div>";
+            }
+
+
             $query = "SELECT id,name,description,price,created,modified FROM products ORDER BY id DESC";
             $result = mysqli_query($conn, $query);
             
@@ -80,7 +91,8 @@
                 <strong>Warning!</strong> Zero records found.
             </div>";
             }
-        ?>
+
+         ?>
     </div>
     <!-- End container -->
 
@@ -88,5 +100,16 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <!-- Bootstrap js -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>   
+    
+    <!-- Delete Confirmation -->
+    <script>
+        function deleteUser(id){
+
+            var answer = confirm("Do you want to delete this product? ");
+            if(answer){
+                window.location = `delete.php?id=${id}`;
+            }
+        }
+    </script>
 </body>
 </html>
