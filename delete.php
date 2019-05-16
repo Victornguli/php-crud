@@ -12,12 +12,11 @@ $query = "DELETE FROM products WHERE id='$id'";
 
 if(!$result = mysqli_query($conn,$query))
 {
-    die("Unable to delete record");
+    header("Location:index.php?action=deleted");
 } 
 else
 {
-    header("Location:index.php?action=deleted");
-
+    die("Unable to delete record");
 }
 
 

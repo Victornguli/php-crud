@@ -34,6 +34,12 @@
 
         <?php
             include "config/database.php";
+            
+            $page = isset($_GET["page"]) ? $_GET["page"] : 1;
+            $records_per_page = 5;
+
+            $from_record_num = ($records_per_page * $page) - $records_per_page;
+
 
             $action = isset($_GET["action"]) ? $_GET["action"] : "";
             
@@ -45,7 +51,14 @@
             }
 
 
-            $query = "SELECT id,name,description,price,created,modified FROM products ORDER BY id DESC";
+            $query = "SELECT id,name,description,price,created,modified FROM products ORDER BY id DESC
+                LIMIT :from_record_num, :record_per_page";
+            
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(":from_record_num", $from_record_num, PDO::PARAM_INT);
+            $stmt->bindParam(":records_per_page", $records_per_page, PDO::PARAM_INT);
+            $stmt->execute();
+
             $result = mysqli_query($conn, $query);
             
             echo "<a href='create.php' class='btn btn-primary m-b-1em'>Create new Product</a>";
@@ -83,6 +96,15 @@
                         echo "</tr>";
 
                     }
+                    $query = "SELECT COUNT(*) as total_rows FROM products";
+                    $stmt = $con->prepare($query);
+                    
+                    // execute query
+                    $stmt->execute();
+                    
+                    // get total rows
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $total_rows = $row['total_rows'];
                     // end table
                     echo "</table>";
             }else{
@@ -92,6 +114,9 @@
             </div>";
             }
 
+            // paginate records
+            $page_url="index.php?";
+            include_once "paging.php";
          ?>
     </div>
     <!-- End container -->
