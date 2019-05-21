@@ -35,6 +35,15 @@
             include "config/database.php";
             echo "<a href='create.php' class='btn btn-primary m-b-1em'>Create new Product</a>";
 
+            $action = isset($_GET["action"]) ? $_GET["action"] : "";
+            
+            if ($action == "deleted"){
+                echo "<div class='alert alert-success alert-dismissible'>
+                <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                <strong>Success!</strong>One product deleted.
+            </div>";
+            }
+            
             if (isset($_GET["page_no"])){
                 $page_no = $_GET["page_no"];
             } else{
@@ -51,63 +60,18 @@
             $res_data = mysqli_query($conn, $query);
 
             if(mysqli_num_rows($res_data) > 0 ){
-                echo "<table class='table table-hover table-responsive table-bordered'>";//start table
- 
-                //creating our table heading
-                echo "<tr>";
-                    echo "<th>ID</th>";
-                    echo "<th>Name</th>";
-                    echo "<th>Description</th>";
-                    echo "<th>Price</th>";
-                    echo "<th>Action</th>";
-                echo "</tr>";
 
-                //Table with records from database
-                while($row = mysqli_fetch_assoc($res_data)){
-                    echo "<tr>";
-                        echo "<td>{$row["id"]}</td>";
-                        echo "<td>{$row["name"]}</td>";
-                        echo "<td>{$row["description"]}</td>";
-                        echo "<td>&#36; {$row["price"]}</td>";
-                        echo "<td>";
-                            //Read one record
-                            echo "<a href='read_one.php?id={$row["id"]}' class='btn btn-info m-r-1em'> Read </a>";
-                            
-                            //Update one record
-                            echo "<a href='update.php?id={$row["id"]}' class='btn btn-primary m-r-1em'> Edit </a>";
-
-                            //Delete User
-                            echo "<a href='#' onclick='deleteUser({$row["id"]})' class='btn btn-danger m-r-1em'> Delete </a>";
-                        echo "</td>";
-                    echo "</tr>";
-
-                }
-                // end table
-                echo "</table>";
-        }else{
-            echo mysqli_error($conn)."<div class='alert alert-danger alert-dismissible'>
-            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-            <strong>Warning!</strong> Zero records found.
-        </div>";
-        }
-
-            $action = isset($_GET["action"]) ? $_GET["action"] : "";
-            
-            if ($action == "deleted"){
-                echo "<div class='alert alert-success alert-dismissible'>
+            }else{
+                echo mysqli_error($conn)."<div class='alert alert-danger alert-dismissible'>
                 <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                <strong>Success!</strong>One product deleted.
+                <strong>Warning!</strong> Zero records found.
             </div>";
             }
 
-
-            //$query = "SELECT id,name,description,price,created,modified FROM products ORDER BY id DESC LIMIT $offest, $no";
-
-            //$result = mysqli_query($conn, $query);
             
             // paginate records
          ?>
-        
+        <div id="ajax"></div>        
         <ul class="pagination">
             <li> <a href="?page_no=1">First</a> </li>
             <li class="<?php  if($page_no <= 1) {echo 'disabled';} ?>">
@@ -119,22 +83,65 @@
             <li><a href="?page_no=<?php echo $total_pages; ?>">Last</a></li>
         </ul>
     </div>
+
     <!-- End container -->
 
      <!-- Jquery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
     <!-- Bootstrap js -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>   
     
     <!-- Delete Confirmation -->
     <script>
-        function deleteUser(id){
 
+        function deleteUser(id){
             var answer = confirm("Do you want to delete this product? ");
             if(answer){
                 window.location = `delete.php?id=${id}`;
             }
         }
+
+
+        $(document).ready(function(){
+            $.get("read.php", function(data,status){
+                    //alert (`${data}  ${status}`);
+                    var products = JSON.parse(data);
+                    output = `
+                    <table class='table table-hover table-responsive table-bordered'>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    `;
+
+                    for (var i in products){
+                        output += `
+                            <tr>
+                                <td>${products[i].id}</td>
+                                <td>${products[i].name}</td>
+                                <td>${products[i].description}</td>
+                                <td>${products[i].price}</td>
+                                <td>
+                                    <a href= ' read_one.php?id=${products[i].id}' class='btn btn-info m-r-1em'> Read </a>
+
+                                    <a href='update.php?id=${products[i].id}' class='btn btn-primary m-r-1em'> Edit </a>
+
+                                    <a href='#' id='delete'  onClick='deleteUser(${products[i].id})' class='btn btn-danger m-r-1em'> Delete </a>
+
+                                </td>
+                            </tr>
+                        `
+                    }
+                    output += `
+                        </table>
+                    `;
+                    $("#ajax").html(output);
+                });
+        });
     </script>
 </body>
 </html>

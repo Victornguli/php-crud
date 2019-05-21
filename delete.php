@@ -10,7 +10,7 @@ if (isset ($_GET["id"])){
 
 $query = "DELETE FROM products WHERE id='$id'";
 
-if(!$result = mysqli_query($conn,$query))
+if($result = mysqli_query($conn,$query))
 {
     header("Location:index.php?action=deleted");
 } 
