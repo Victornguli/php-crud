@@ -22,7 +22,7 @@
                 $description = $_POST["description"];
                 $price = $_POST["price"];
                 $created = date("Y-m-d, H:i:s");
-                $image = !empty($_FILES["image"]["name"]) ? sha1_file($_FILES["image"]["tmp_name"]) . "-" . basename($_FILES["image"]["name"]) : "";
+                $image = basename($_FILES["image"]["name"]);
 
                 $image = htmlspecialchars(strip_tags($image));
 
@@ -33,8 +33,7 @@
                 if(!$result = mysqli_query($conn, $query)){
                     echo "<div class='alert alert-danger alert-dismissible'>
                             <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                            <strong>Warning!</strong> Record could not be saved.
-                        </div>";
+                            <strong>Warning!</strong> Record could not be saved.  ".mysqli_error($conn). "</div>";
                     //Could not save record
                 }else{
                     //Record Saved
@@ -42,61 +41,45 @@
                             <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                             <strong>Success!</strong> Record saved.
                         </div>";
-                    
-                        if($image){
-                            $target_directory = "uploads/";
-                            $target_file = $target_directory . $image;
-                            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
-                            $file_upload_error_messages = "";
-
-                            $check = getimagesize($_FILES["image"]["tmp_name"]);
-
-                            if($check !== false){
-                                //Image
-                            }else{
-                                $file_upload_error_messages .="<div>Submitted file is not an image</div>.";
-                            }
-
-                            $allowed_file_types = array("jpeg","jpg", "png", "gif");
-                            if(!in_array($file_type, $allowed_file_types)){
-                                $file_upload_error_messages.="<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
-                            }
-                            
-                            if(file_exists($target_file)){
-                                $file_upload_error_messages.="<div>Image already exists. Try to change file name.</div>";
-                            }
-
-                            if($_FILES['image']['size'] > (1024000)){
-                                $file_upload_error_messages.="<div>Image must be less than 1 MB in size.</div>";
-                            }
-
-                            // make sure the 'uploads' folder exists
-                            // if not, create it
-                            if(!is_dir($target_directory)){
-                                mkdir($target_directory, 0777, true);
-                            }
-
-                            // if $file_upload_error_messages is still empty
-                            if(empty($file_upload_error_messages)){
-                                // it means there are no errors, so try to upload the file
-                                if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
-                                    // it means photo was uploaded
-                                }else{
-                                    echo "<div class='alert alert-danger'>";
-                                        echo "<div>Unable to upload photo.</div>";
-                                        echo "<div>Update the record to upload photo.</div>";
-                                    echo "</div>";
-                                }
-                            }
-                            
-                            // if $file_upload_error_messages is NOT empty
-                            else{
-                                // it means there are some errors, so show them to user
-                                echo "<div class='alert alert-danger'>";
-                                    echo "<div>{$file_upload_error_messages}</div>";
-                                    echo "<div>Update the record to upload photo.</div>";
-                                echo "</div>";
+                        $target_dir = "uploads/";
+                        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+                        $uploadOk = 1;
+                        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+                        // Check if image file is a actual image or fake image
+                        $check = getimagesize($_FILES["image"]["tmp_name"]);
+                        if($check !== false) {
+                            echo "File is an image - " . $check["mime"] . ".";
+                            $uploadOk = 1;
+                        } else {
+                            echo "File is not an image.";
+                            $uploadOk = 0;
+                        }
+                        // Check if file already exists
+                        if (file_exists($target_file)) {
+                            echo "Sorry, file already exists.";
+                            $uploadOk = 0;
+                        }
+                        // Check file size
+                        if ($_FILES["image"]["size"] > 500000) {
+                            echo "Sorry, your file is too large.";
+                            $uploadOk = 0;
+                        }
+                        // Allow certain file formats
+                        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                        && $imageFileType != "gif" ) {
+                            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                            $uploadOk = 0;
+                        }
+                        // Check if $uploadOk is set to 0 by an error
+                        if ($uploadOk == 0) {
+                            echo "Sorry, your file was not uploaded.";
+                        // if everything is ok, try to upload file
+                        } else {
+                            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                                echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+                            } else {
+                                echo "Sorry, there was an error uploading your file.";
                             }
                         }
                 }

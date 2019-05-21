@@ -38,6 +38,13 @@
                         <td>Price</td>
                         <td>{$row["price"]}</td>
                     </tr>
+
+                    <tr>
+                        <td>Image</td>
+                        <td>";
+                        echo $row["image"] ? "<img src='../../../REST_API/php-jquery/uploads/{$row["image"]}' style='width:300px;height:300px;border-radius:50%' />" : "No image found.";
+                        echo "</td>
+                    </tr>
                     <tr>
                         <td></td>
                         <td>
