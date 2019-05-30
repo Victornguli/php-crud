@@ -3,21 +3,32 @@ include "config/database.php";
 
 if (isset ($_GET["id"])){
     $id = $_GET["id"];
-    echo $id;
+
 } else{
-    die("ERROR : Record not found");
+    $data = [
+        status => "error",
+        message => exit(mysqli_error($conn))
+    ];
 }
 
 $query = "DELETE FROM products WHERE id='$id'";
 
 if($result = mysqli_query($conn,$query))
 {
-    header("Location:index.php?action=deleted");
-} 
+    $data = [
+        status => "success",
+        message => "Product deleted successfully"
+    ];
+    // header("Location:index.php?action=deleted");
+}
+ 
 else
-{
-    die("Unable to delete record");
+{   $data = [
+        status => "error",
+        message => exit(mysqli_error($conn))
+    ];
 }
 
-
+$data = json_encode($data);
+echo $data;
 ?>
