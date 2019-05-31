@@ -1,12 +1,12 @@
-function deleteProduct(id){
+function deleteProduct(id) {
     var answer = confirm("Do you want to delete this product? ");
-    if(answer){
+    if (answer) {
         $.get("delete.php",
-            {id:id},
+            { id: id },
             function (data, status) {
                 var result = JSON.parse(data);
                 console.log(result.status);
-                if(result.status == "success"){
+                if (result.status == "success") {
                     $("#feedback").html(`
                         <div class='alert alert-success alert-dismissible'>
                         <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
@@ -21,45 +21,53 @@ function deleteProduct(id){
     }
 }
 
-function edit(id){
-    // console.log(id);
-    $.get("read_one.php", {id:id},
-        function (data, textStatus, jqXHR) {
+function getDetails(id) {
+    $.get("read_one.php", { id: id },
+        function (data, status) {
             var data = JSON.parse(data);
             var product = data.message[0];
-            //console.table(product);
-            var output = `
-            `;
-            for(var i in product){
-                output = `
-
-                <table class="table table-responsive table-bordered">
-                <tr>
-                    <th>ID</th>
-                    <th>name</th>
-                    <th>Description</th>
-                </tr>
-                <tr>
-                    <td>${product.id}</td>
-                    <td>${product.name}</td>
-                    <td>${product.description}</td>
-                </tr>
-                </table>
-                `;
-            }
-            $(`#edit${id}`).html(output);
-        },
-    );
+            $("#edit_id").val(product.id);
+            $("#edit_name").val(product.name);
+            $("#edit_description").val(product.description);
+            $("#edit_price").val(product.price);
+            // console.log(product);
+        }
+    )
 }
 
-function readAll(){
+function upateProduct() {
+    // console.log(id);
+    var id = $("#edit_id").val();
+    var name = $("#edit_name").val();
+    var description = $("#edit_description").val();
+    var price = $("#edit_price").val();
+    
+    $.post("update.php", {
+        id:id,
+        name:name,
+        description:description,
+        price:price
+    },
+    function (data, textStatus, jqXHR) {
+        var data = JSON.parse(data);
+        $("#feedback").html(`
+        <div class='alert alert-success alert-dismissible'>
+            <a href='#' class='close'data-dismiss='alert' aria-label='close'>&times;</a>
+            <strong>Success!</strong> Product updated.
+        </div>
+        `);
+    });
+    readAll();
+}
+
+function readAll() {
     $.ajax({
         type: "get",
         url: "read.php",
         success: function (data, status) {
             var products = JSON.parse(data);
 
-            if(products.status == "success"){
+            if (products.status == "success") {
                 var product_list = products.message;
                 // console.log(product_list);
                 var output = `
@@ -72,15 +80,16 @@ function readAll(){
                     <th>Actions</th>
                 </tr>
             `;
-            for(var i in product_list){
-                output += `
+                for (var i in product_list) {
+                    output += `
                     <tr>
                         <td> ${product_list[i].id}</td>
                         <td> ${product_list[i].name}</td>
                         <td> ${product_list[i].description}</td>
                         <td> ${product_list[i].price}</td>
                         <td>
-                            <button class="btn btn-info" onclick="edit(${product_list[i].id})" data-toggle="collapse" data-target="#${product_list[i].id}" id="#delete_btn">Edit</button>
+                            <button class="btn btn-info"
+                            onclick="getDetails(${product_list[i].id})" data-toggle="modal"  data-target="#edit-modal">Edit</button>
                             <!-- <button class="btn btn-success" id="${product_list[i].id}">Edit</button> --!>
                             <button class="btn btn-danger" onclick="deleteProduct(${product_list[i].id})" id="#delete_btn">Delete</button>
                         </td>
@@ -91,19 +100,19 @@ function readAll(){
                         <td colspan="4"><div id="edit${product_list[i].id}"></div></td>
                     </tr>
                 `;
-            }
+                }
                 $("#contents").html(output);
             }
             //No Products Found
-            else if (products.status == 404){
+            else if (products.status == 404) {
                 $("#contents").html(`
                     <div class="alert alert-danger">Zero products found!</div>
                 `);
             }
-            else{
+            else {
                 $("#contents").html(`
                 <div class="alert alert-danger">Error failed to retreive products!</div>
-                `); 
+                `);
             }
 
             //console.log(products.status == "success");
@@ -111,16 +120,21 @@ function readAll(){
     });
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     readAll();
-    $("#delete_btn").click(function(){
-        console.log();
+
+    $("#edit_submit_btn").click(function () {
+        upateProduct();
+        readAll();
+        $("#myModal").modal("hide");
+        
     });
+
 });
 
 // $(document).ready(function(){
 
-    
+
 
 //     $.get("read.php", function(data,status){
 //             //alert (`${data}  ${status}`);

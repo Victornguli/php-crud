@@ -19,6 +19,9 @@
     .mt0{ 
         margin-top:0; 
     }
+    .modal-content:hover{
+        border: 1px solid skyblue;
+    }
     </style>
 
 </head>
@@ -34,11 +37,35 @@
         <div id="feedback"></div>
         <div class="panel panel-info">
             <div class="panel-heading">All Products</div>
-            <div class="panel-body" id="contents">
+            <!-- Edit Modal -->
+            <div class="modal fade" id="edit-modal" role="dialog" style="">
+                <div class="modal-dialog modal-center" style="position:absolute; width:50%; top:10%; left:25%;">
+                <div class="modal-content" style="border-radius:10px">
+                    <div class="modal-header bg-warning" style="border-radius:10px">
+                    <button type="button" class="close" data-dismiss="modal" style="font-size:30px;">&times;</button>
+                    <h4 class="modal-title">Edit Product<span </span></h4>
+                    </div>
+                    <div class="modal-body">
+                    <input type="" id="edit_id" hidden>
+                    <label for="edit_name">Product Name</label>
+                    <input type="text" class="form-control" id="edit_name">
+                    <hr>
+                    <label for="edit_description" rows="5">Product description</label>
+                    <textarea class="form-control" id="edit_description"></textarea>
+                    <hr>
+                    <label for="edit_price" rows="5">Price</label>
+                    <input type="number" class="form-control" id="edit_price">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" id="edit_submit_btn" class="btn btn-primary" data-dismiss="modal">Edit</button>
+                    </div>
+                </div>
+                </div>
             </div>
+            <!-- End Edit Modal -->
+            <!-- Products -->
+            <div class="panel-body" id="contents">
 
-            <div class="panel-footer">
-                <div id="demo" class="collapse">Lorem</div>
             </div>
 
         </div>
