@@ -34,7 +34,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
 </head>
 <body>
-
     <!-- Container -->
     <div class="container">
 
@@ -108,7 +107,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
         </div>
 
-        <a href="auth/logout.php" class="btn btn-danger">Logout</a>
+        <a href="auth/logout.php" class="btn btn-danger mb-5">Logout</a>
+
+        <a href="auth/reset_password.php" class="btn btn-warning mb-5">Reset</a>
 
         <div id="ajax"></div>        
         <!-- <ul class="pagination">
