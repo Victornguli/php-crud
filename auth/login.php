@@ -54,24 +54,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $password_err = "The password you entered is not valid";
                     }
                 }
-                // mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                // if(mysqli_stmt_fetch($stmt)){
-                //         if(password_verify($password, $hashed_password)){
-                //             // Password is correct, so start a new session
-                //             session_start();
-                            
-                //             // Store data in session variables
-                //             $_SESSION["loggedin"] = true;
-                //             $_SESSION["id"] = $id;
-                //             $_SESSION["username"] = $username;                            
-                            
-                //             // Redirect user to welcome page
-                //             header("location: welcome.php");
-                //         } else{
-                //             // Display an error message if password is not valid
-                //             $password_err = "The password you entered was not valid.";
-                //         }
-                //     }
                 } else{
                     // Display an error message if username doesn't exist
                     $username_err = "No account found with that username.";
