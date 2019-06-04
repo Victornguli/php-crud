@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true){
-    header("location: index.php");
+    header("location: ../index.php");
     exit;
 }
 
@@ -48,6 +48,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $_SESSION["id"] = $row["id"];
                         $_SESSION["username"] = $row["name"];
 
+                        echo $_SESSION["loggedin"].$_SESSION["id"].$_SESSION["username"];
                         //Redirect to home page
                         header("location: ../index.php");
                     }else{

@@ -1,5 +1,8 @@
-<?php if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: auth/login.php");
+<?php 
+session_start();
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    echo $_SESSION["id"];
+    //header("location: auth/login.php");
     exit;
 }
 ?>
@@ -104,6 +107,8 @@
             </div>
 
         </div>
+
+        <a href="auth/logout.php" class="btn btn-danger">Logout</a>
 
         <div id="ajax"></div>        
         <!-- <ul class="pagination">
