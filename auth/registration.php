@@ -1,6 +1,5 @@
 <?php
 require_once("../config/database.php");
-
 //Initialize username and password as empty variables
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
