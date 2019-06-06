@@ -54,6 +54,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     <h4 class="modal-title">Add New Product<span </span></h4>
                     </div>
                     <div class="modal-body">
+                    <form action="" id="addproduct" enctype="multipart/form-data" method="post">
                     <input type="" id="edit_id" hidden>
                     <label for="add_name">Product Name</label>
                     <input type="text" class="form-control" id="add_name">
@@ -63,10 +64,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     <hr>
                     <label for="add_price" rows="5">Price</label>
                     <input type="number" class="form-control" id="add_price">
+                    <label for="file">Picture</label>
+                    <input type="file" name="file" id="file">
                     </div>
                     <div class="modal-footer">
                     <div id="error_msg"></div>
-                    <button type="button" id="add_submit_btn" class="btn btn-primary" data-dismiss="modal">Add</button>
+                    <input type="button" value="Add Product" id="add_submit_btn" class="btn btn-primary">
+                    </form>
                     </div>
                 </div>
                 </div>
@@ -75,7 +79,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 
             <!-- Edit Modal -->
             <div class="modal fade" id="edit-modal" role="dialog" style="">
-                <div class="modal-dialog modal-center" style="position:absolute; width:50%; top:10%; left:25%;">
+                <div class="modal-dialog modal-center" style="position:absolute; width:50%; top:0%; left:25%;">
                 <div class="modal-content" style="border-radius:10px">
                     <div class="modal-header bg-warning" style="border-radius:10px">
                     <button type="button" class="close" data-dismiss="modal" style="font-size:30px;">&times;</button>
@@ -91,6 +95,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                     <hr>
                     <label for="edit_price" rows="5">Price</label>
                     <input type="number" class="form-control" id="edit_price">
+                    <hr>
+                    <img src="" id="edit_image" alt="" height="100%" width="100%">
                     </div>
                     <div class="modal-footer">
                     <button type="button" id="edit_submit_btn" class="btn btn-primary" data-dismiss="modal">Edit</button>

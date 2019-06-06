@@ -7,7 +7,7 @@ function readAll() {
         url: "read.php",
         success: function (data, status) {
             //var products = JSON.parse(data);
-            console.log(data);
+            //console.log(data);
             $("#contents").html(data);
             //console.log(products.status == "success");
         }
@@ -15,56 +15,59 @@ function readAll() {
 }
 
 
-// create product
-function createProduct(){
-    console.log("Working");
-    var name = $("#add_name").val();
-    var description = $("#add_description").val();
-    var price = $("#add_price").val();
-    console.log(name+description+price);
 
-    if(!name){
-        console.log("Add name");
-        $("#error_msg").html(`
-            <div class="alert alert-danger">
-                Error! Please add a product name
-            </div>
-        `);
+// create product
+// function createProduct(){
+//     var name = $("#add_name").val();
+//     var description = $("#add_description").val();
+//     var price = $("#add_price").val();
+//     var image = $("#file").val();
+//     console.log(name+description+price);
+
+//     if(!image){
+//         console.log("Add image");
+//         $("#error_msg").html(`
+//             <div class="alert alert-danger">
+//                 Error! Please add a product image
+//             </div>
+//         `);
         
-    }else{
-        $.post("create.php", 
-            {
-                name:name,
-                description:description,
-                price:price
-            },
-            function (data, textStatus, jqXHR) {
-                var data = JSON.parse(data);
-                if(data.status == "success"){
-                    readAll();
-                    $("#feedback").html(`
-                        <div class='alert alert-success     alert-dismissible'>
-                        <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
-                        <strong>Success ! </strong>${data.message}
-                        </div>
-                    `);
-                    $("#add_modal").modal("hide");
-                }else{
-                    readAll();
-                    $("#feedback").html(`
-                        <div class='alert alert-danger     alert-dismissible'>
-                        <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
-                        <strong>Error ! </strong>${data.message}
-                        </div>
-                    `);
-                    $("#add_modal").modal("hide");
-                }
-                console.log(data);
-            },
-        );
-    }
-    readAll();
-}
+//     }else{
+//         $.post("create.php", 
+//             {
+//                 name:name,
+//                 description:description,
+//                 price:price,
+//                 image:image
+//             },
+//             function (data, textStatus, jqXHR) {
+//                 var data = JSON.parse(data);
+//                 if(data.status == "success"){
+//                     readAll();
+//                     $("#feedback").html(`
+//                         <div class='alert alert-success     alert-dismissible'>
+//                         <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
+//                         <strong>Success ! </strong>${data.message}
+//                         </div>
+//                     `);
+//                     $("#add_modal").modal("hide");
+//                 }else{
+//                     readAll();
+//                     $("#feedback").html(`
+//                         <div class='alert alert-danger     alert-dismissible'>
+//                         <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
+//                         <strong>Error ! </strong>${data.message}
+//                         </div>
+//                     `);
+//                     $("#add_modal").modal("hide");
+//                 }
+//                 console.log(data);
+//             },
+//         );
+        
+//     }
+//     readAll();
+// }
 
 
 // delete product
@@ -102,6 +105,7 @@ function getDetails(id) {
             $("#edit_name").val(product.name);
             $("#edit_description").val(product.description);
             $("#edit_price").val(product.price);
+            $("#edit_image").attr("src", "uploads/"+product.image);
             // console.log(product);
         }
     )
@@ -146,8 +150,60 @@ $(document).ready(function () {
         
     });
 
-    $("#add_submit_btn").click(function () {
-        createProduct();
+
+    $("#add_submit_btn").click(function() {
+    var image = document.getElementById("file");
+    var name = $("#add_name").val();
+    var description = $("#add_description").val();
+    var price = $("#add_price").val();   
+
+    var formData = new FormData();
+    formData.append("image", image.files[0], image.files[0].name);
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+
+    console.log(image.files[0]);
+    if(!image){
+        console.log("Add image");
+        $("#error_msg").html(`
+            <div class="alert alert-danger">
+                Error! Please add a product image
+            </div>
+        `);
+    }else{
+        $.ajax({
+            type: "post",
+            url: "create.php",
+            data: formData,
+            processData : false,
+            contentType: false,
+            success: function (data, status) {
+                console.log(data);
+                var data = JSON.parse(data);
+                    if(data.status == "success"){
+                        readAll();
+                        $("#feedback").html(`
+                            <div class='alert alert-success     alert-dismissible'>
+                            <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
+                            <strong>Success ! </strong>${data.message}
+                            </div>
+                        `);
+                        $("#add_modal").modal("hide");
+                    }else{
+                        readAll();
+                        $("#feedback").html(`
+                            <div class='alert alert-danger     alert-dismissible'>
+                            <a href='#' class='close'   data-dismiss='alert' aria-label='close'>&times;</a>
+                            <strong>Error ! </strong>${data.message}
+                            </div>
+                        `);
+                        $("#add_modal").modal("hide");
+                    }
+                    $("#add_modal").modal("hide");
+            }
+        });
+    }
         readAll();
         return false;
         
