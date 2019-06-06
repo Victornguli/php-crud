@@ -2,7 +2,7 @@
 session_start();
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     echo $_SESSION["id"];
-    //header("location: auth/login.php");
+    header("location: auth/login.php");
     exit;
 }
 ?>

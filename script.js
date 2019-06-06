@@ -6,61 +6,13 @@ function readAll() {
         type: "get",
         url: "read.php",
         success: function (data, status) {
-            var products = JSON.parse(data);
-
-            if (products.status == "success") {
-                var product_list = products.message;
-                // console.log(product_list);
-                var output = `
-                <table class="table table-resposive table-striped table-hover ">
-                <tr>
-                    <th>ID</th>
-                    <th>Product</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                </tr>
-            `;
-                for (var i in product_list) {
-                    output += `
-                    <tr>
-                        <td> ${product_list[i].id}</td>
-                        <td> ${product_list[i].name}</td>
-                        <td> ${product_list[i].description}</td>
-                        <td> ${product_list[i].price}</td>
-                        <td>
-                            <button class="btn btn-info"
-                            onclick="getDetails(${product_list[i].id})" data-toggle="modal"  data-target="#edit-modal">Edit</button>
-                            <!-- <button class="btn btn-success" id="${product_list[i].id}">Edit</button> --!>
-                            <button class="btn btn-danger" onclick="deleteProduct(${product_list[i].id})" id="#delete_btn">Delete</button>
-                        </td>
-                    </tr>
-
-                    <tr id="${product_list[i].id}" class="collapse">
-                        <td></td>
-                        <td colspan="4"><div id="edit${product_list[i].id}"></div></td>
-                    </tr>
-                `;
-                }
-                $("#contents").html(output);
-            }
-            //No Products Found
-            else if (products.status == 404) {
-                $("#contents").html(`
-                    <div class="alert alert-danger">Zero products found!</div>
-                `);
-            }
-            else {
-                $("#contents").html(`
-                <div class="alert alert-danger">Error failed to retreive products!</div>
-                `);
-            }
-
+            //var products = JSON.parse(data);
+            console.log(data);
+            $("#contents").html(data);
             //console.log(products.status == "success");
         }
     });
 }
-
 
 
 // create product
@@ -110,7 +62,6 @@ function createProduct(){
                 console.log(data);
             },
         );
-        
     }
     readAll();
 }
