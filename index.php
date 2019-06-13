@@ -30,6 +30,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     .modal-content:hover{
         border: 1px solid skyblue;
     }
+    #search-form{
+        width: 50%;
+        margin: 10px 0px 10px 10px;
+    }
     </style>
 
 </head>
@@ -44,6 +48,17 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         <div id="feedback"></div>
         <div class="panel panel-info">
             <div class="panel-heading">All Products</div>
+
+            <form id="search-form">
+                <div class="input-group">
+                    <input type="text" id="search" class="form-control" placeholder="Search Products">
+                    <div class="input-group-btn">
+                    <button class="btn btn-default" id="search-btn" type="button">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    </div>
+                </div>
+            </form>
 
             <!-- Add Modal -->
             <div class="modal fade" id="add_modal" role="dialog" style="">

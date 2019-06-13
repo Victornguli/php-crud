@@ -14,7 +14,46 @@ function readAll() {
     });
 }
 
+//Multi-word search for products
+function searchProducts(){
+    var searchWords = $("#search").val();
+    var searchArray = searchWords.split("")
+    if (searchWords == ""){
+        readAll()
+    }else{
+        var count = 1;
 
+        var formData = {};
+    
+        for (var j=0; j<searchArray.length; j++){
+            formData["product"+count] = searchArray[j];
+            count += 1;
+        }
+    
+        // console.log(formData);
+        // for(var pair of formData.entries()) {
+        //     console.log(pair[0]+ ', '+ pair[1]); 
+        //  }
+    
+        $.ajax({
+            type: "POST",
+            url: "search.php",
+            data: {
+                "word" : searchWords,
+            },
+            success: function (data, status) {
+                //var products = JSON.parse(data);
+                // console.log(data);
+                $("#contents").html(data);
+                //console.log(products.status == "success");
+            }
+        });
+    }
+
+
+    
+
+}
 
 // create product
 // function createProduct(){
@@ -142,6 +181,14 @@ function upateProduct() {
 // Document ready
 $(document).ready(function () {
     readAll();
+
+    $("#search-btn").on("click", function(){
+        searchProducts();
+    });
+
+    $("#search").on("keyup", function(){
+        searchProducts();
+    });
 
     $("#edit_submit_btn").click(function () {
         upateProduct();
